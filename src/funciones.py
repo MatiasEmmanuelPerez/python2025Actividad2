@@ -64,8 +64,8 @@ def contar_menciones(descriptions):
     
     # Recorre cada descripción
     for descripcion in descriptions:
-        # Convierte a minúsculas para hacer una búsqueda mas facil
-        descripcion_lower = descripcion.lower()
+        # Convierte a minúsculas para hacer una búsqueda mas facil y divide la descripcion en lista de palabras
+        descripcion_lower = descripcion.lower().split()
         
         # Cuenta las menciones de cada palabra en la descripción
         for palabra in palabras:
@@ -78,20 +78,17 @@ def contar_menciones(descriptions):
 import random
 import string
 import datetime
-def generar_codigo_descuento(usuario):
+def generar_codigo_descuento(usuario, fecha):
     # Verificar que el nombre de usuario no exceda los 15 caracteres
     if len(usuario) > 15:
         return "El nombre de usuario no puede exceder los 15 caracteres."
 
-    # Obtener la fecha actual en formato YYYYMMDD
-    fecha_hora_actual = datetime.datetime.now().strftime("%Y%m%d")
-
     # Generar una cadena aleatoria de caracteres (letras y números) para completar hasta 30 caracteres
-    caracteres_restantes = 30 - len(usuario) - len(fecha_hora_actual) - 1  # Resta 1 para el guion
+    caracteres_restantes = 30 - len(usuario) - len(fecha) - 1  # Resta 1 para el guion
     aleatorios = ''.join(random.choices(string.ascii_uppercase + string.digits, k=caracteres_restantes))
 
     # Crear el código de descuento con el formato requerido
-    codigo_descuento = f"{usuario.upper()}-{fecha_hora_actual}-{aleatorios}"
+    codigo_descuento = f"{usuario.upper()}-{fecha}-{aleatorios}"
     return codigo_descuento
 #----------------------------------------------------------------------------------------------------------------------------
 
@@ -132,8 +129,8 @@ def limpiar_datos(clients):
 # funciones del ejercicio 10:
 # Función para calcular el puntaje de un jugador
 def calcular_puntaje_jugador(estadisticas):
-    puntaje = estadisticas['kills'] * 3 + estadisticas['asistencias'] * 1
-    if estadisticas['muertes']:
+    puntaje = estadisticas['kills'] * 3 + estadisticas['assists'] * 1
+    if estadisticas['deaths']:
         puntaje -= 1  # Restar 1 si el jugador tiene muertes
     return puntaje
 
@@ -146,8 +143,8 @@ def calcular_puntajes_ronda(datos_ronda, estadisticas_jugadores):
         
         # Actualizar las estadísticas del jugador en estadisticas_jugadores
         estadisticas_jugadores[jugador]['kills'] += estadisticas['kills']
-        estadisticas_jugadores[jugador]['asistencias'] += estadisticas['asistencias']
-        estadisticas_jugadores[jugador]['muertes'] += 1 if estadisticas['muertes'] else 0
+        estadisticas_jugadores[jugador]['asistencias'] += estadisticas['assists']
+        estadisticas_jugadores[jugador]['muertes'] += 1 if estadisticas['deaths'] else 0
         estadisticas_jugadores[jugador]['puntos'] += puntaje
     
     return puntajes_ronda
@@ -169,7 +166,7 @@ def obtener_puntos_jugador(jugador_puntajes):
 # Función para imprimir el ranking de los jugadores
 def imprimir_ranking(estadisticas_jugadores):
     jugadores_ordenados = sorted(estadisticas_jugadores.items(), key=obtener_puntos_jugador, reverse=True)
-    print(f"{'Jugador':<8} {'Kills':<6} {'Asistencias':<12} {'Muertes':<7} {'MVPs':<5} {'Puntos':<7}")
+    print(f"{'Jugador':<8} {'kills':<6} {'Asistencias':<12} {'Muertes':<7} {'MVPs':<5} {'Puntos':<7}")
     print("-" * 50)
     for jugador, estadisticas in jugadores_ordenados:
         print(f"{jugador:<8} {estadisticas['kills']:<6} {estadisticas['asistencias']:<12} {estadisticas['muertes']:<7} {estadisticas['mvp']:<5} {estadisticas['puntos']:<7}")
