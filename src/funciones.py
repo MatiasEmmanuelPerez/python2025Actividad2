@@ -135,11 +135,11 @@ def calcular_puntaje_jugador(estadisticas):
     return puntaje
 
 # Función para calcular el puntaje de todos los jugadores en una ronda
-def calcular_puntajes_ronda(datos_ronda, estadisticas_jugadores):
-    puntajes_ronda = []
-    for jugador, estadisticas in datos_ronda.items():
+def calcular_puntajes_partida(datos_partida, estadisticas_jugadores):
+    puntajes_partida = []
+    for jugador, estadisticas in datos_partida.items():
         puntaje = calcular_puntaje_jugador(estadisticas)
-        puntajes_ronda.append((jugador, puntaje))
+        puntajes_partida.append((jugador, puntaje))
         
         # Actualizar las estadísticas del jugador en estadisticas_jugadores
         estadisticas_jugadores[jugador]['kills'] += estadisticas['kills']
@@ -147,13 +147,13 @@ def calcular_puntajes_ronda(datos_ronda, estadisticas_jugadores):
         estadisticas_jugadores[jugador]['muertes'] += 1 if estadisticas['deaths'] else 0
         estadisticas_jugadores[jugador]['puntos'] += puntaje
     
-    return puntajes_ronda
+    return puntajes_partida
 
 # Función para determinar el MVP de una ronda
-def determinar_mvp(puntajes_ronda):
+def determinar_mvp(puntajes_partida):
     max_puntaje = -float('inf')
     mvp = None
-    for jugador, puntaje in puntajes_ronda:
+    for jugador, puntaje in puntajes_partida:
         if puntaje > max_puntaje:
             max_puntaje = puntaje
             mvp = jugador
@@ -164,12 +164,11 @@ def obtener_puntos_jugador(jugador_puntajes):
     return jugador_puntajes[1]['puntos']
 
 # Función para imprimir el ranking de los jugadores
-def imprimir_ranking(estadisticas_jugadores):
+def imprimir_partida(estadisticas_jugadores):
     jugadores_ordenados = sorted(estadisticas_jugadores.items(), key=obtener_puntos_jugador, reverse=True)
-    print(f"{'Jugador':<8} {'kills':<6} {'Asistencias':<12} {'Muertes':<7} {'MVPs':<5} {'Puntos':<7}")
+    print(f"{'Jugador':<8} {'Kills':<6} {'Asistencias':<12} {'Muertes':<7} {'MVPs':<5} {'Puntos':<7}")
     print("-" * 50)
     for jugador, estadisticas in jugadores_ordenados:
         print(f"{jugador:<8} {estadisticas['kills']:<6} {estadisticas['asistencias']:<12} {estadisticas['muertes']:<7} {estadisticas['mvp']:<5} {estadisticas['puntos']:<7}")
     print("\n")
-
 
